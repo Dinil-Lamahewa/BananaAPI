@@ -61,3 +61,11 @@
   text-align: center;
   margin-top: 10px;
 }
+
+
+.date-hint {
+  color: #b3b3b3; /* Light gray to look like a placeholder */
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: left;
+}
