@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import "../App.css";
 
-function LoginForm() {
+function LoginForm({ onSwitchToRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -46,6 +46,15 @@ function LoginForm() {
           </button>
         </form>
         {error && <p className="error">{error}</p>}
+        <p style={{ color: "#ffffff", textAlign: "center", marginTop: "10px" }}>
+          New to Banana Catcher?{" "}
+          <span
+            style={{ color: "#e6b800", cursor: "pointer" }}
+            onClick={onSwitchToRegister}
+          >
+            Sign Up
+          </span>
+        </p>
       </div>
     </div>
   );
