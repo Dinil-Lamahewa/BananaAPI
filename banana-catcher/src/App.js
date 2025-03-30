@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import LoginForm from "./Components/LoginForm";
+import RegisterForm from "./Components/RegisterForm";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  const [user, setUser] = useState(null);
+  const [showLogin, setShowLogin] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        setUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleSwitchToLogin = () => setShowLogin(true);
+  const handleSwitchToRegister = () => setShowLogin(false);
+
+  if (user) {
+    return (
+      <div className="login-container">
+        <h1>Welcome, {user.email}!</h1>
+        <button onClick={() => auth.signOut()}>Log Out</button>
+      </div>
+    );
+  }
+
+  return showLogin ? (
+    <LoginForm onSwitchToRegister={handleSwitchToRegister} />
+  ) : (
+    <RegisterForm onSwitchToLogin={handleSwitchToLogin} />
   );
 }
 
