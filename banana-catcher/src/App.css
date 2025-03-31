@@ -48,11 +48,16 @@
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 10px; /* Existing spacing */
 }
 
 .login-btn:hover {
-  background-color: #cca300; /* Slightly darker yellow on hover */
+  background-color: #cca300;
+}
+
+/* Add spacing between buttons */
+.login-box button + button {
+  margin-top: 15px; /* Extra spacing between buttons */
 }
 
 .error {
@@ -68,4 +73,41 @@
   font-size: 12px;
   margin-top: 5px;
   text-align: left;
+}
+
+/* Existing styles remain unchanged, add these at the bottom */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it’s on top */
+}
+
+.modal-content {
+  background-color: #2b2b2b; /* Dark gray background */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.modal-content button {
+  margin-top: 10px; /* Spacing between modal buttons */
+}
+
+.modal-content button:hover {
+  background-color: #cca300; /* Hover effect for difficulty buttons */
+}
+
+.modal-content button[style*="background-color: #ff4d4d"]:hover {
+  background-color: #e60000; /* Hover effect for Cancel button */
 }
