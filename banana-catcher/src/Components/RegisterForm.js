@@ -16,11 +16,10 @@ function RegisterForm({ onSwitchToLogin }) {
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
-  // Format the birthday to "BirthDay-mm/dd/yyyy"
   const formatBirthday = (date) => {
-    if (!date) return "BirthDay-mm/dd/yyyy"; // Default hint
-    const [year, month, day] = date.split("-"); // Split YYYY-MM-DD
-    return `BirthDay-${month}/${day}/${year}`; // Reformat to BirthDay-mm/dd/yyyy
+    if (!date) return "BirthDay-mm/dd/yyyy";
+    const [year, month, day] = date.split("-");
+    return `BirthDay-${month}/${day}/${year}`;
   };
 
   const handleRegister = async (e) => {
@@ -28,6 +27,7 @@ function RegisterForm({ onSwitchToLogin }) {
     setError("");
 
     if (!emailRegex.test(email)) {
+      console.log(emailRegex.test(email)); // true
       setError("Please enter a valid Gmail address.");
       return;
     }
@@ -45,14 +45,20 @@ function RegisterForm({ onSwitchToLogin }) {
     }
 
     try {
+      // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // Capture current date and time
+      const createdAt = new Date().toISOString(); // e.g., "2025-03-30T12:34:56.789Z"
+
+      // Save user data in Firestore, including creation date
       await setDoc(doc(db, "users", user.uid), {
         firstName,
         lastName,
         birthday,
         email,
+        createdAt, // Add creation timestamp
       });
 
       setFirstName("");

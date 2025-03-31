@@ -26,7 +26,7 @@ function App() {
   if (user) {
     return (
       <div className="login-container">
-        <h1>Welcome, {user.email}!</h1>
+        <h1 style={{color:"yellow"}}>Welcome, {user.email}!</h1>
         <button onClick={() => auth.signOut()}>Log Out</button>
       </div>
     );
