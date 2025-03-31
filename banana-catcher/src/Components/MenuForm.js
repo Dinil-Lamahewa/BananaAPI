@@ -2,21 +2,20 @@ import React, { useState } from "react";
 import { auth } from "../firebase";
 import "../App.css";
 
-function MenuForm({ user, userData }) {
+function MenuForm({ user, userData, onDifficultySelect }) {
   const [showModal, setShowModal] = useState(false);
 
   const handleQuit = () => {
-    auth.signOut(); // Logs the user out
+    auth.signOut();
   };
 
   const handlePlay = () => {
-    setShowModal(true); // Show the modal when Play is clicked
+    setShowModal(true);
   };
 
   const handleDifficultySelect = (difficulty) => {
-    setShowModal(false); // Close the modal
-    console.log(`Selected difficulty: ${difficulty}`); // Placeholder for game logic
-    // Add your game start logic here based on difficulty
+    setShowModal(false);
+    onDifficultySelect(difficulty); // Pass difficulty to App.js
   };
 
   return (
@@ -24,7 +23,7 @@ function MenuForm({ user, userData }) {
       <div className="login-box">
         <div className="logo">Banana Catcher</div>
         <h2 style={{ color: "#ffffff", textAlign: "center" }}>
-          Welcome, Banana Catcher!
+          Welcome,Banana Catcher!
         </h2>
         <button className="login-btn" onClick={handlePlay}>
           Play
@@ -35,7 +34,6 @@ function MenuForm({ user, userData }) {
         </button>
       </div>
 
-      {/* Modal for difficulty selection */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">

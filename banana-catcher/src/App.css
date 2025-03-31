@@ -111,3 +111,55 @@
 .modal-content button[style*="background-color: #ff4d4d"]:hover {
   background-color: #e60000; /* Hover effect for Cancel button */
 }
+
+.game-container {
+  position: relative;
+  height: 100vh;
+  background-color: #1a1a1a; /* Black background */
+  overflow: hidden;
+}
+
+.health {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #ff4d4d; /* Red hearts */
+  font-size: 24px;
+}
+
+.timer {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #e6b800; /* Dark yellow */
+  font-size: 24px;
+}
+
+.formula {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.formula img {
+  max-width: 80%;
+  height: auto;
+}
+
+.falling-number {
+  position: absolute;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 5px 10px;
+  background-color: #e6b800; /* Dark yellow */
+  border-radius: 5px;
+}
+
+.bucket {
+  position: absolute;
+  bottom: 10px;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  font-size: 30px; /* Placeholder emoji size */
+}
