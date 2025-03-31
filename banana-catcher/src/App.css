@@ -48,11 +48,16 @@
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 10px; /* Existing spacing */
 }
 
 .login-btn:hover {
-  background-color: #cca300; /* Slightly darker yellow on hover */
+  background-color: #cca300;
+}
+
+/* Add spacing between buttons */
+.login-box button + button {
+  margin-top: 15px; /* Extra spacing between buttons */
 }
 
 .error {

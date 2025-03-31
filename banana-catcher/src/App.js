@@ -1,20 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import LoginForm from "./Components/LoginForm";
 import RegisterForm from "./Components/RegisterForm";
+import MenuForm from "./Components/MenuForm";
 import "./App.css";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [showLogin, setShowLogin] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
+        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          setUserData(userDoc.data());
+        } else {
+          console.log("No such user document!");
+          return;
+        }
       } else {
         setUser(null);
+        setUserData(null);
       }
     });
     return () => unsubscribe();
@@ -24,12 +36,7 @@ function App() {
   const handleSwitchToRegister = () => setShowLogin(false);
 
   if (user) {
-    return (
-      <div className="login-container">
-        <h1 style={{color:"yellow"}}>Welcome, {user.email}!</h1>
-        <button onClick={() => auth.signOut()}>Log Out</button>
-      </div>
-    );
+    return <MenuForm user={user} userData={userData} />;
   }
 
   return showLogin ? (
