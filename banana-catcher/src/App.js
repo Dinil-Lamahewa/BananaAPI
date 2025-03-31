@@ -5,12 +5,14 @@ import { doc, getDoc } from "firebase/firestore";
 import LoginForm from "./Components/LoginForm";
 import RegisterForm from "./Components/RegisterForm";
 import MenuForm from "./Components/MenuForm";
+import GameView from "./Components/GameView";
 import "./App.css";
 
 function App() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [showLogin, setShowLogin] = useState(true);
+  const [difficulty, setDifficulty] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -20,13 +22,11 @@ function App() {
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
           setUserData(userDoc.data());
-        } else {
-          console.log("No such user document!");
-          return;
         }
       } else {
         setUser(null);
         setUserData(null);
+        setDifficulty(null);
       }
     });
     return () => unsubscribe();
@@ -34,9 +34,25 @@ function App() {
 
   const handleSwitchToLogin = () => setShowLogin(true);
   const handleSwitchToRegister = () => setShowLogin(false);
+  const handleGameOver = () => setDifficulty(null); // Return to menu
 
-  if (user) {
-    return <MenuForm user={user} userData={userData} />;
+  if (user && userData) {
+    if (difficulty) {
+      return (
+        <GameView
+          difficulty={difficulty}
+          userData={userData}
+          onGameOver={handleGameOver}
+        />
+      );
+    }
+    return (
+      <MenuForm
+        user={user}
+        userData={userData}
+        onDifficultySelect={setDifficulty}
+      />
+    );
   }
 
   return showLogin ? (
