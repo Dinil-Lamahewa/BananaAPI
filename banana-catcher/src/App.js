@@ -34,7 +34,7 @@ function App() {
 
   const handleSwitchToLogin = () => setShowLogin(true);
   const handleSwitchToRegister = () => setShowLogin(false);
-  const handleGameOver = () => setDifficulty(null); // Return to menu
+  const handleGameOver = () => setDifficulty(null);
 
   if (user && userData) {
     if (difficulty) {

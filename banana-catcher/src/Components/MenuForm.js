@@ -1,9 +1,26 @@
-import React, { useState } from "react";
-import { auth } from "../firebase";
+import React, { useState, useEffect } from "react";
+import { auth, db } from "../firebase";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import "../App.css";
 
 function MenuForm({ user, userData, onDifficultySelect }) {
   const [showModal, setShowModal] = useState(false);
+  const [leaderboard, setLeaderboard] = useState([]);
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      const scoresRef = collection(db, "scores");
+      const q = query(scoresRef, orderBy("score", "desc"));
+      const querySnapshot = await getDocs(q);
+      const scores = querySnapshot.docs.map((doc, index) => ({
+        id: doc.id,
+        rank: index + 1,
+        ...doc.data(),
+      }));
+      setLeaderboard(scores);
+    };
+    fetchLeaderboard();
+  }, []);
 
   const handleQuit = () => {
     auth.signOut();
@@ -15,7 +32,7 @@ function MenuForm({ user, userData, onDifficultySelect }) {
 
   const handleDifficultySelect = (difficulty) => {
     setShowModal(false);
-    onDifficultySelect(difficulty); // Pass difficulty to App.js
+    onDifficultySelect(difficulty);
   };
 
   return (
@@ -23,15 +40,30 @@ function MenuForm({ user, userData, onDifficultySelect }) {
       <div className="login-box">
         <div className="logo">Banana Catcher</div>
         <h2 style={{ color: "#ffffff", textAlign: "center" }}>
-          Welcome,Banana Catcher!
+          Welcome, Banana Catcher!
         </h2>
         <button className="login-btn" onClick={handlePlay}>
           Play
         </button>
-        <button className="login-btn">Leaderboard</button>
+        <button className="login-btn" disabled>
+          Leaderboard
+        </button>
         <button className="login-btn" onClick={handleQuit}>
           Quit
         </button>
+      </div>
+
+      {/* Leaderboard */}
+      <div className="leaderboard-container">
+        <h3 className="leaderboard-title">Leaderboard</h3>
+        <ul className="leaderboard-list">
+          {leaderboard.map((entry) => (
+            <li key={entry.id} className="leaderboard-item">
+              <span>{entry.rank}. {entry.name}</span>
+              <span>{entry.score}</span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {showModal && (

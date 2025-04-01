@@ -202,3 +202,50 @@
   z-index: 1000; /* Ensure popups are on top */
   font-size: 24px;
 }
+
+
+
+/* New Styles */
+.leaderboard-container {
+  width: 100%;
+  max-width: 400px;
+  background-color: #2b2b2b;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  margin-top: 20px;
+}
+
+.leaderboard-title {
+  color: #e6b800;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.leaderboard-list {
+  list-style: none;
+  padding: 0;
+  color: #ffffff;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #4d4d4d;
+}
+
+.quit-modal {
+  background-color: #2b2b2b;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.quit-modal button {
+  margin: 10px 5px;
+}
