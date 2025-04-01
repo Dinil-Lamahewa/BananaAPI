@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { auth } from "../firebase";
+import Leaderboard from "./Leaderboard"; // Import Leaderboard
 import "../App.css";
 
 function MenuForm({ user, userData, onDifficultySelect }) {
   const [showModal, setShowModal] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false); // New state
 
   const handleQuit = () => {
     auth.signOut();
@@ -15,20 +17,34 @@ function MenuForm({ user, userData, onDifficultySelect }) {
 
   const handleDifficultySelect = (difficulty) => {
     setShowModal(false);
-    onDifficultySelect(difficulty); // Pass difficulty to App.js
+    onDifficultySelect(difficulty);
   };
+
+  const handleLeaderboard = () => {
+    setShowLeaderboard(true);
+  };
+
+  const handleBack = () => {
+    setShowLeaderboard(false);
+  };
+
+  if (showLeaderboard) {
+    return <Leaderboard onBack={handleBack} />;
+  }
 
   return (
     <div className="login-container">
       <div className="login-box">
         <div className="logo">Banana Catcher</div>
         <h2 style={{ color: "#ffffff", textAlign: "center" }}>
-          Welcome,Banana Catcher!
+          Welcome, Banana Catcher!
         </h2>
         <button className="login-btn" onClick={handlePlay}>
           Play
         </button>
-        <button className="login-btn">Leaderboard</button>
+        <button className="login-btn" onClick={handleLeaderboard}>
+          Leaderboard
+        </button>
         <button className="login-btn" onClick={handleQuit}>
           Quit
         </button>
