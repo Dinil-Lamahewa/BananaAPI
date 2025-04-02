@@ -12,6 +12,7 @@ function RegisterForm({ onSwitchToLogin }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // New loading state
 
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -25,10 +26,11 @@ function RegisterForm({ onSwitchToLogin }) {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true); // Start loading
 
     if (!emailRegex.test(email)) {
-      console.log(emailRegex.test(email)); // true
       setError("Please enter a valid Gmail address.");
+      setLoading(false);
       return;
     }
 
@@ -36,29 +38,27 @@ function RegisterForm({ onSwitchToLogin }) {
       setError(
         "Password must be 8+ characters with uppercase, lowercase, numbers, and symbols (e.g., !@#$%^&*)."
       );
+      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
+      setLoading(false);
       return;
     }
 
     try {
-      // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      const createdAt = new Date().toISOString();
 
-      // Capture current date and time
-      const createdAt = new Date().toISOString(); // e.g., "2025-03-30T12:34:56.789Z"
-
-      // Save user data in Firestore, including creation date
       await setDoc(doc(db, "users", user.uid), {
         firstName,
         lastName,
         birthday,
         email,
-        createdAt, // Add creation timestamp
+        createdAt,
       });
 
       setFirstName("");
@@ -69,8 +69,18 @@ function RegisterForm({ onSwitchToLogin }) {
       setConfirmPassword("");
     } catch (err) {
       setError("Registration failed. Email might already be in use.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
+
+  if (loading) {
+    return (
+      <div className="loading-spinner">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="login-container">

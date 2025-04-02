@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { collection, getDocs, query, orderBy, where, doc, getDoc } from "firebase/firestore"; // Added doc, getDoc
+import { collection, getDocs, query, orderBy, where, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "../App.css";
 
 function Leaderboard({ onBack }) {
   const [leaderboard, setLeaderboard] = useState([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState("easy");
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
+      setLoading(true); // Start loading
       try {
-        // Fetch all users' scores
         const scoresRef = collection(db, "scores");
         const usersSnapshot = await getDocs(scoresRef);
 
-        // Collect scores for the selected difficulty from each user's subcollection
         const scoresData = [];
         for (const userDoc of usersSnapshot.docs) {
           const difficultyRef = doc(db, `scores/${userDoc.id}/difficulties`, selectedDifficulty);
@@ -27,7 +27,6 @@ function Leaderboard({ onBack }) {
           }
         }
 
-        // Sort by highScore descending and assign ranks
         scoresData.sort((a, b) => b.highScore - a.highScore);
         const rankedData = scoresData.map((entry, index) => ({
           rank: index + 1,
@@ -38,7 +37,9 @@ function Leaderboard({ onBack }) {
         setLeaderboard(rankedData);
       } catch (error) {
         console.error("Error fetching leaderboard:", error);
-        setLeaderboard([]); // Reset on error
+        setLeaderboard([]);
+      } finally {
+        setLoading(false); // Done loading
       }
     };
     fetchLeaderboard();
@@ -47,6 +48,14 @@ function Leaderboard({ onBack }) {
   const handleDifficultyChange = (e) => {
     setSelectedDifficulty(e.target.value);
   };
+
+  if (loading) {
+    return (
+      <div className="loading-spinner">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="login-container">

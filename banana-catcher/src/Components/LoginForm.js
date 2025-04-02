@@ -7,9 +7,11 @@ function LoginForm({ onSwitchToRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // New loading state
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setError("");
@@ -17,8 +19,18 @@ function LoginForm({ onSwitchToRegister }) {
       setPassword("");
     } catch (err) {
       setError("Invalid email or password");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
+
+  if (loading) {
+    return (
+      <div className="loading-spinner">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="login-container">
