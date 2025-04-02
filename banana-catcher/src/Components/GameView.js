@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import bucketImage from "../assets/img/buscket.png";
-import { doc, getDoc, setDoc } from "firebase/firestore"; // Import Firestore methods
-import { db } from "../firebase"; // Import Firestore db
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css";
 import "../App.css";
@@ -21,7 +21,6 @@ function GameView({ difficulty, userData, onGameOver }) {
   const [showMissPopup, setShowMissPopup] = useState(false);
   const [showGameOverPopup, setShowGameOverPopup] = useState(false);
 
-  // Fetch formula from API
   const fetchFormula = async () => {
     try {
       const response = await fetch("https://marcconrad.com/uob/banana/api.php");
@@ -49,18 +48,15 @@ function GameView({ difficulty, userData, onGameOver }) {
     }
   };
 
-  // Reset timer and fetch formula
   const resetRound = () => {
     setTimeLeft(difficulty === "Easy" ? 30 : difficulty === "Medium" ? 20 : 15);
     fetchFormula();
   };
 
-  // Initial fetch
   useEffect(() => {
     fetchFormula();
   }, []);
 
-  // Timer countdown
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -76,7 +72,7 @@ function GameView({ difficulty, userData, onGameOver }) {
               setShowGameOverPopup(true);
               setTimeout(() => {
                 setShowGameOverPopup(false);
-                handleGameEnd(); // Save score and end game
+                handleGameEnd();
               }, 2000);
             }
             return newHealth;
@@ -89,7 +85,6 @@ function GameView({ difficulty, userData, onGameOver }) {
     return () => clearInterval(timer);
   }, [timeLeft, onGameOver]);
 
-  // Animate falling numbers
   useEffect(() => {
     const totalTime = difficulty === "Easy" ? 30 : difficulty === "Medium" ? 20 : 15;
     const speed = 100 / (totalTime * 20);
@@ -104,7 +99,6 @@ function GameView({ difficulty, userData, onGameOver }) {
     return () => clearInterval(fallInterval);
   }, [difficulty]);
 
-  // Move bucket with mouse (relative to container)
   useEffect(() => {
     const handleMove = (e) => {
       const container = document.querySelector(".numbers-container");
@@ -120,7 +114,6 @@ function GameView({ difficulty, userData, onGameOver }) {
     return () => window.removeEventListener("mousemove", handleMove);
   }, []);
 
-  // Check collision or miss
   useEffect(() => {
     setNumbers((prevNumbers) => {
       let newHealth = health;
@@ -158,7 +151,7 @@ function GameView({ difficulty, userData, onGameOver }) {
           setShowGameOverPopup(true);
           setTimeout(() => {
             setShowGameOverPopup(false);
-            handleGameEnd(); // Save score and end game
+            handleGameEnd();
           }, 2000);
         }
       }
@@ -167,10 +160,10 @@ function GameView({ difficulty, userData, onGameOver }) {
     });
   }, [numbers, bucketPosition, solution, health, onGameOver]);
 
-  // Save highest score and end game
+  // Save highest score by difficulty and end game
   const handleGameEnd = async () => {
-    const userId = userData.email; // Use email as unique identifier
-    const scoreRef = doc(db, "scores", userId);
+    const userId = userData.email;
+    const scoreRef = doc(db, "scores", userId, "difficulties", difficulty.toLowerCase());
     const scoreDoc = await getDoc(scoreRef);
     const currentHighScore = scoreDoc.exists() ? scoreDoc.data().highScore : 0;
 
@@ -178,14 +171,14 @@ function GameView({ difficulty, userData, onGameOver }) {
       await setDoc(scoreRef, {
         highScore: score,
         playerName: `${userData.firstName} ${userData.lastName}`,
+        difficulty: difficulty,
       });
     }
-    onGameOver(); // Return to menu
+    onGameOver();
   };
 
-  // Handle Quit
   const handleQuit = () => {
-    handleGameEnd(); // Save score before quitting
+    handleGameEnd();
   };
 
   return (
