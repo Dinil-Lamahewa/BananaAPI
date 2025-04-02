@@ -20,6 +20,7 @@ function GameView({ difficulty, userData, onGameOver }) {
   const [showWrongPopup, setShowWrongPopup] = useState(false);
   const [showMissPopup, setShowMissPopup] = useState(false);
   const [showGameOverPopup, setShowGameOverPopup] = useState(false);
+  const [loading, setLoading] = useState(true); // New loading state
 
   const fetchFormula = async () => {
     try {
@@ -45,6 +46,8 @@ function GameView({ difficulty, userData, onGameOver }) {
       );
     } catch (error) {
       console.error("Error fetching formula:", error);
+    } finally {
+      setLoading(false); // Done loading
     }
   };
 
@@ -160,7 +163,6 @@ function GameView({ difficulty, userData, onGameOver }) {
     });
   }, [numbers, bucketPosition, solution, health, onGameOver]);
 
-  // Save highest score by difficulty and end game
   const handleGameEnd = async () => {
     const userId = userData.email;
     const scoreRef = doc(db, "scores", userId, "difficulties", difficulty.toLowerCase());
@@ -180,6 +182,14 @@ function GameView({ difficulty, userData, onGameOver }) {
   const handleQuit = () => {
     handleGameEnd();
   };
+
+  if (loading) {
+    return (
+      <div className="loading-spinner">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="game-container container-fluid p-0">
