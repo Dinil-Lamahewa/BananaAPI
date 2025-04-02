@@ -15,12 +15,13 @@ function GameView({ difficulty, userData, onGameOver }) {
   const [formulaImage, setFormulaImage] = useState("");
   const [solution, setSolution] = useState(null);
   const [numbers, setNumbers] = useState([]);
-  const [bucketPosition, setBucketPosition] = useState(50);
+  const [bucketPosition, setBucketPosition] = useState(50); // Horizontal position (%)
+  const [bucketTop, setBucketTop] = useState(80); // Vertical position (%), starts near bottom
   const [showCorrectPopup, setShowCorrectPopup] = useState(false);
   const [showWrongPopup, setShowWrongPopup] = useState(false);
   const [showMissPopup, setShowMissPopup] = useState(false);
   const [showGameOverPopup, setShowGameOverPopup] = useState(false);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   const fetchFormula = async () => {
     try {
@@ -47,7 +48,7 @@ function GameView({ difficulty, userData, onGameOver }) {
     } catch (error) {
       console.error("Error fetching formula:", error);
     } finally {
-      setLoading(false); // Done loading
+      setLoading(false);
     }
   };
 
@@ -88,6 +89,7 @@ function GameView({ difficulty, userData, onGameOver }) {
     return () => clearInterval(timer);
   }, [timeLeft, onGameOver]);
 
+  // Animate falling numbers
   useEffect(() => {
     const totalTime = difficulty === "Easy" ? 30 : difficulty === "Medium" ? 20 : 15;
     const speed = 100 / (totalTime * 20);
@@ -102,42 +104,72 @@ function GameView({ difficulty, userData, onGameOver }) {
     return () => clearInterval(fallInterval);
   }, [difficulty]);
 
+  // Move bucket with mouse (2D movement)
   useEffect(() => {
     const handleMove = (e) => {
       const container = document.querySelector(".numbers-container");
       if (container) {
         const containerRect = container.getBoundingClientRect();
         const containerWidth = containerRect.width;
+        const containerHeight = containerRect.height;
+
         const mouseX = e.clientX - containerRect.left;
-        const newPos = (mouseX / containerWidth) * 100;
-        setBucketPosition(Math.max(0, Math.min(80, newPos)));
+        const mouseY = e.clientY - containerRect.top;
+
+        const newLeft = (mouseX / containerWidth) * 100;
+        const newTop = (mouseY / containerHeight) * 100;
+
+        // Keep bucket within bounds (0-80% left, 0-90% top)
+        setBucketPosition(Math.max(0, Math.min(80, newLeft)));
+        setBucketTop(Math.max(0, Math.min(90, newTop)));
       }
     };
     window.addEventListener("mousemove", handleMove);
     return () => window.removeEventListener("mousemove", handleMove);
   }, []);
 
+  // Check collision anywhere in the container
   useEffect(() => {
     setNumbers((prevNumbers) => {
       let newHealth = health;
       const updatedNumbers = prevNumbers.map((num) => {
         if (num.caught) return num;
 
-        if (num.top > 80 && num.top < 90) {
-          if (num.left > bucketPosition - 10 && num.left < bucketPosition + 10) {
-            if (num.value === solution) {
-              setScore((prev) => prev + 10);
-              setShowCorrectPopup(true);
-              setTimeout(() => setShowCorrectPopup(false), 2000);
-              resetRound();
-            } else {
-              newHealth = Math.max(0, newHealth - 1);
-              setShowWrongPopup(true);
-              setTimeout(() => setShowWrongPopup(false), 2000);
-              resetRound();
-            }
-            return { ...num, caught: true };
+        // Collision detection: Check if bucket overlaps with number
+        const bucketWidth = 50; // Bucket size in pixels (approximate %)
+        const bucketHeight = 50;
+        const numberWidth = 40; // Approx size of falling-number (adjust if needed)
+        const numberHeight = 40;
+
+        const bucketLeft = bucketPosition;
+        const bucketRight = bucketLeft + (bucketWidth / window.innerWidth) * 100;
+        const bucketTopPos = bucketTop;
+        const bucketBottom = bucketTopPos + (bucketHeight / window.innerHeight) * 100;
+
+        const numLeft = num.left;
+        const numRight = numLeft + (numberWidth / window.innerWidth) * 100;
+        const numTop = num.top;
+        const numBottom = numTop + (numberHeight / window.innerHeight) * 100;
+
+        const isColliding =
+          bucketLeft < numRight &&
+          bucketRight > numLeft &&
+          bucketTopPos < numBottom &&
+          bucketBottom > numTop;
+
+        if (isColliding) {
+          if (num.value === solution) {
+            setScore((prev) => prev + 10);
+            setShowCorrectPopup(true);
+            setTimeout(() => setShowCorrectPopup(false), 2000);
+            resetRound();
+          } else {
+            newHealth = Math.max(0, newHealth - 1);
+            setShowWrongPopup(true);
+            setTimeout(() => setShowWrongPopup(false), 2000);
+            resetRound();
           }
+          return { ...num, caught: true };
         } else if (num.top > 100) {
           newHealth = Math.max(0, newHealth - 1);
           setShowMissPopup(true);
@@ -161,7 +193,7 @@ function GameView({ difficulty, userData, onGameOver }) {
 
       return updatedNumbers.filter((num) => !num.caught);
     });
-  }, [numbers, bucketPosition, solution, health, onGameOver]);
+  }, [numbers, bucketPosition, bucketTop, solution, health, onGameOver]);
 
   const handleGameEnd = async () => {
     const userId = userData.email;
@@ -221,8 +253,8 @@ function GameView({ difficulty, userData, onGameOver }) {
           </div>
         ))}
         <div
-          className="bucket position-absolute bottom-0"
-          style={{ left: `${bucketPosition}%` }}
+          className="bucket position-absolute"
+          style={{ left: `${bucketPosition}%`, top: `${bucketTop}%` }}
         >
           <img src={bucketImage} alt="Bucket" style={{ width: "50px", height: "50px" }} />
         </div>
