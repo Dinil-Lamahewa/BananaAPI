@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import bucketImage from "../assets/img/buscket.png";
+import React, { useState, useEffect,useContext } from "react";
+import { AudioContext } from "./AudioContext"; 
+import bucketImage from "../assets/img/catch.png";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -22,6 +23,16 @@ function GameView({ difficulty, userData, onGameOver }) {
   const [showMissPopup, setShowMissPopup] = useState(false);
   const [showGameOverPopup, setShowGameOverPopup] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { audioRef, mute } = useContext(AudioContext);
+
+  useEffect(() => {
+    if (audioRef.current && !mute) {
+      audioRef.current.play().catch((e) => console.log("Autoplay prevented:", e));
+      audioRef.current.volume = 0.15;
+    } else if (audioRef.current && mute) {
+      audioRef.current.pause();
+    }
+  }, [audioRef, mute]);
 
   const fetchFormula = async () => {
     try {
@@ -239,7 +250,7 @@ function GameView({ difficulty, userData, onGameOver }) {
           src={formulaImage}
           alt="Math Formula"
           className="img-fluid"
-          style={{ maxWidth: "70%", maxHeight: "500px" }}
+          style={{ maxWidth: "100%", maxHeight: "800px" }}
         />
       </div>
       <div className="numbers-container position-absolute top-50 end-0 translate-middle-y w-50 h-75 bg-dark p-3 three-d-container">
@@ -256,7 +267,7 @@ function GameView({ difficulty, userData, onGameOver }) {
           className="bucket position-absolute"
           style={{ left: `${bucketPosition}%`, top: `${bucketTop}%` }}
         >
-          <img src={bucketImage} alt="Bucket" style={{ width: "50px", height: "50px" }} />
+          <img src={bucketImage} alt="Bucket" style={{ width: "150px", height: "150px" }} />
         </div>
       </div>
       <div className="controls position-absolute bottom-0 start-50 translate-middle-x mb-3">

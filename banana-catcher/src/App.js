@@ -6,6 +6,7 @@ import LoginForm from "./Components/LoginForm";
 import RegisterForm from "./Components/RegisterForm";
 import MenuForm from "./Components/MenuForm";
 import GameView from "./Components/GameView";
+import { AudioProvider } from "./Components/AudioContext";
 import "./App.css";
 
 function App() {
@@ -38,37 +39,32 @@ function App() {
   const handleSwitchToRegister = () => setShowLogin(false);
   const handleGameOver = () => setDifficulty(null);
 
-  if (loading) {
-    return (
-      <div className="loading-spinner">
-        <div className="spinner"></div>
-      </div>
-    );
-  }
-
-  if (user && userData) {
-    if (difficulty) {
-      return (
-        <GameView
-          difficulty={difficulty}
-          userData={userData}
-          onGameOver={handleGameOver}
-        />
-      );
-    }
-    return (
-      <MenuForm
-        user={user}
-        userData={userData}
-        onDifficultySelect={setDifficulty}
-      />
-    );
-  }
-
-  return showLogin ? (
-    <LoginForm onSwitchToRegister={handleSwitchToRegister} />
-  ) : (
-    <RegisterForm onSwitchToLogin={handleSwitchToLogin} />
+  return (
+    <AudioProvider>
+      {loading ? (
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+        </div>
+      ) : user && userData ? (
+        difficulty ? (
+          <GameView
+            difficulty={difficulty}
+            userData={userData}
+            onGameOver={handleGameOver}
+          />
+        ) : (
+          <MenuForm
+            user={user}
+            userData={userData}
+            onDifficultySelect={setDifficulty}
+          />
+        )
+      ) : showLogin ? (
+        <LoginForm onSwitchToRegister={handleSwitchToRegister} />
+      ) : (
+        <RegisterForm onSwitchToLogin={handleSwitchToLogin} />
+      )}
+    </AudioProvider>
   );
 }
 

@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useState,useContext  } from "react";
 import { auth } from "../firebase";
 import Leaderboard from "./Leaderboard"; // Import Leaderboard
+import { AudioContext } from "../Components/AudioContext";
 import "../App.css";
+
+
+
+
 
 function MenuForm({ user, userData, onDifficultySelect }) {
   const [showModal, setShowModal] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false); // New state
+  const { mute, toggleMute } = useContext(AudioContext);
 
   const handleQuit = () => {
     auth.signOut();
@@ -44,6 +50,9 @@ function MenuForm({ user, userData, onDifficultySelect }) {
         </button>
         <button className="login-btn" onClick={handleLeaderboard}>
           Leaderboard
+        </button>
+        <button className="login-btn" onClick={toggleMute}>
+          {mute ? "🔇 Unmute" : "🔊 Mute"}
         </button>
         <button className="login-btn" onClick={handleQuit}>
           Quit
@@ -86,6 +95,7 @@ function MenuForm({ user, userData, onDifficultySelect }) {
       )}
     </div>
   );
+
 }
 
 export default MenuForm;
