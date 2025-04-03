@@ -1,10 +1,13 @@
-import React, { useState, useEffect,useContext } from "react";
-import { AudioContext } from "./AudioContext"; 
+import React, { useState, useEffect, useContext } from "react";
+import { AudioContext } from "./AudioContext";
 import bucketImage from "../assets/img/catch.png";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css";
+import correctSound from '../assets/aud/CR.mp3'; // Adjust the path if needed
+import GameOverSound from '../assets/aud/GameOver.mp3'; // Adjust the path if needed
+import WrongSound from '../assets/aud/Wrong.mp3'; // Adjust the path if needed
 import "../App.css";
 
 function GameView({ difficulty, userData, onGameOver }) {
@@ -171,16 +174,23 @@ function GameView({ difficulty, userData, onGameOver }) {
         if (isColliding) {
           if (num.value === solution) {
             setScore((prev) => prev + 10);
+            const audio = new Audio(correctSound);
+            audio.play();
+            audio.volume = 1;
             setShowCorrectPopup(true);
             setTimeout(() => setShowCorrectPopup(false), 2000);
             resetRound();
           } else {
             newHealth = Math.max(0, newHealth - 1);
+            const audio = new Audio(WrongSound);
+            audio.play();
+            audio.volume = 1;
             setShowWrongPopup(true);
             setTimeout(() => setShowWrongPopup(false), 2000);
             resetRound();
           }
           return { ...num, caught: true };
+
         } else if (num.top > 100) {
           newHealth = Math.max(0, newHealth - 1);
           setShowMissPopup(true);
@@ -195,6 +205,9 @@ function GameView({ difficulty, userData, onGameOver }) {
         setHealth(newHealth);
         if (newHealth <= 0) {
           setShowGameOverPopup(true);
+          const audio = new Audio(GameOverSound);
+          audio.volume = 1;
+            audio.play();
           setTimeout(() => {
             setShowGameOverPopup(false);
             handleGameEnd();
@@ -257,17 +270,30 @@ function GameView({ difficulty, userData, onGameOver }) {
         {numbers.map((num) => (
           <div
             key={num.id}
-            className="falling-number position-absolute bg-warning text-dark rounded p-2"
-            style={{ top: `${num.top}%`, left: `${num.left}%` }}
+            className="falling-number position-absolute text-white d-flex flex-column justify-content-end align-items-center"
+            style={{
+              top: `${num.top}%`,
+              left: `${num.left}%`,
+              width: "150px", // Adjust width to fit the banana image
+              height: "140px", // Adjust height to fit the banana image
+              backgroundImage: `url(${require('../assets/img/banana.png')})`, // Correct path to the banana image
+              backgroundSize: "contain",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              fontSize: "25px", // Adjust font size for better visibility
+              fontWeight: "bold", // Make the number bold
+              textShadow: "1px 1px 2px black", // Add shadow for better contrast
+              color: "black", // Ensure the number is visible
+            }}
           >
-            {num.value}
+            <span style={{ marginBottom: "28px", color: "black" }}>{num.value}</span>
           </div>
         ))}
         <div
           className="bucket position-absolute"
           style={{ left: `${bucketPosition}%`, top: `${bucketTop}%` }}
         >
-          <img src={bucketImage} alt="Bucket" style={{ width: "150px", height: "150px" }} />
+          <img src={bucketImage} alt="Bucket" style={{ width: "190px", height: "180px" }} />
         </div>
       </div>
       <div className="controls position-absolute bottom-0 start-50 translate-middle-x mb-3">
@@ -276,13 +302,21 @@ function GameView({ difficulty, userData, onGameOver }) {
         </button>
       </div>
       {showCorrectPopup && (
-        <div className="correct-popup position-absolute top-50 start-50 translate-middle bg-success text-white rounded p-3 animate__animated animate__fadeIn">
-          Correct!
+        <div className="correct-popup position-absolute top-50 start-50 translate-middle bg-success rounded p-3 animate__animated animate__fadeIn">
+          <img
+            src={require('../assets/img/CR.png')} // Correct path to the correct.png image
+            alt="Correct"
+            style={{ width: "150px", height: "140px" }} // Adjust size as needed
+          />
         </div>
       )}
       {showWrongPopup && (
         <div className="wrong-popup position-absolute top-50 start-50 translate-middle bg-danger text-white rounded p-3 animate__animated animate__fadeIn">
-          Wrong!
+          <img
+            src={require('../assets/img/Wrong.png')} // Correct path to the correct.png image
+            alt="Wrong"
+            style={{ width: "150px", height: "140px" }} // Adjust size as needed
+          />
         </div>
       )}
       {showMissPopup && (
@@ -292,7 +326,11 @@ function GameView({ difficulty, userData, onGameOver }) {
       )}
       {showGameOverPopup && (
         <div className="game-over-popup position-absolute top-50 start-50 translate-middle bg-dark text-white rounded p-3 animate__animated animate__fadeIn">
-          Game Over!
+          <img
+            src={require('../assets/img/Gameover.png')} // Correct path to the correct.png image
+            alt="GameOver"
+            style={{ width: "150px", height: "140px" }} // Adjust size as needed
+          />
         </div>
       )}
     </div>
