@@ -5,9 +5,9 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css";
-import correctSound from '../assets/aud/CR.mp3'; // Adjust the path if needed
-import GameOverSound from '../assets/aud/GameOver.mp3'; // Adjust the path if needed
-import WrongSound from '../assets/aud/Wrong.mp3'; // Adjust the path if needed
+import correctSound from '../assets/aud/CR.mp3'; 
+import GameOverSound from '../assets/aud/GameOver.mp3'; 
+import WrongSound from '../assets/aud/Wrong.mp3'; 
 import "../App.css";
 
 function GameView({ difficulty, userData, onGameOver }) {
@@ -19,8 +19,8 @@ function GameView({ difficulty, userData, onGameOver }) {
   const [formulaImage, setFormulaImage] = useState("");
   const [solution, setSolution] = useState(null);
   const [numbers, setNumbers] = useState([]);
-  const [bucketPosition, setBucketPosition] = useState(50); // Horizontal position (%)
-  const [bucketTop, setBucketTop] = useState(80); // Vertical position (%), starts near bottom
+  const [bucketPosition, setBucketPosition] = useState(50); 
+  const [bucketTop, setBucketTop] = useState(80); 
   const [showCorrectPopup, setShowCorrectPopup] = useState(false);
   const [showWrongPopup, setShowWrongPopup] = useState(false);
   const [showMissPopup, setShowMissPopup] = useState(false);
@@ -103,7 +103,7 @@ function GameView({ difficulty, userData, onGameOver }) {
     return () => clearInterval(timer);
   }, [timeLeft, onGameOver]);
 
-  // Animate falling numbers
+  
   useEffect(() => {
     const totalTime = difficulty === "Easy" ? 30 : difficulty === "Medium" ? 20 : 15;
     const speed = 100 / (totalTime * 20);
@@ -118,7 +118,7 @@ function GameView({ difficulty, userData, onGameOver }) {
     return () => clearInterval(fallInterval);
   }, [difficulty]);
 
-  // Move bucket with mouse (2D movement)
+  
   useEffect(() => {
     const handleMove = (e) => {
       const container = document.querySelector(".numbers-container");
@@ -133,7 +133,7 @@ function GameView({ difficulty, userData, onGameOver }) {
         const newLeft = (mouseX / containerWidth) * 100;
         const newTop = (mouseY / containerHeight) * 100;
 
-        // Keep bucket within bounds (0-80% left, 0-90% top)
+        
         setBucketPosition(Math.max(0, Math.min(80, newLeft)));
         setBucketTop(Math.max(0, Math.min(90, newTop)));
       }
@@ -142,17 +142,17 @@ function GameView({ difficulty, userData, onGameOver }) {
     return () => window.removeEventListener("mousemove", handleMove);
   }, []);
 
-  // Check collision anywhere in the container
+  
   useEffect(() => {
     setNumbers((prevNumbers) => {
       let newHealth = health;
       const updatedNumbers = prevNumbers.map((num) => {
         if (num.caught) return num;
 
-        // Collision detection: Check if bucket overlaps with number
-        const bucketWidth = 50; // Bucket size in pixels (approximate %)
+        
+        const bucketWidth = 50; 
         const bucketHeight = 50;
-        const numberWidth = 40; // Approx size of falling-number (adjust if needed)
+        const numberWidth = 40; 
         const numberHeight = 40;
 
         const bucketLeft = bucketPosition;
@@ -274,16 +274,16 @@ function GameView({ difficulty, userData, onGameOver }) {
             style={{
               top: `${num.top}%`,
               left: `${num.left}%`,
-              width: "150px", // Adjust width to fit the banana image
-              height: "140px", // Adjust height to fit the banana image
-              backgroundImage: `url(${require('../assets/img/banana.png')})`, // Correct path to the banana image
+              width: "150px", 
+              height: "140px", 
+              backgroundImage: `url(${require('../assets/img/banana.png')})`, 
               backgroundSize: "contain",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-              fontSize: "25px", // Adjust font size for better visibility
-              fontWeight: "bold", // Make the number bold
-              textShadow: "1px 1px 2px black", // Add shadow for better contrast
-              color: "black", // Ensure the number is visible
+              fontSize: "25px", 
+              fontWeight: "bold", 
+              textShadow: "1px 1px 2px black", 
+              color: "black", 
             }}
           >
             <span style={{ marginBottom: "28px", color: "black" }}>{num.value}</span>
@@ -304,18 +304,18 @@ function GameView({ difficulty, userData, onGameOver }) {
       {showCorrectPopup && (
         <div className="correct-popup position-absolute top-50 start-50 translate-middle bg-success rounded p-3 animate__animated animate__fadeIn">
           <img
-            src={require('../assets/img/CR.png')} // Correct path to the correct.png image
+            src={require('../assets/img/CR.png')} 
             alt="Correct"
-            style={{ width: "150px", height: "140px" }} // Adjust size as needed
+            style={{ width: "150px", height: "140px" }} 
           />
         </div>
       )}
       {showWrongPopup && (
         <div className="wrong-popup position-absolute top-50 start-50 translate-middle bg-danger text-white rounded p-3 animate__animated animate__fadeIn">
           <img
-            src={require('../assets/img/Wrong.png')} // Correct path to the correct.png image
+            src={require('../assets/img/Wrong.png')} 
             alt="Wrong"
-            style={{ width: "150px", height: "140px" }} // Adjust size as needed
+            style={{ width: "150px", height: "140px" }} 
           />
         </div>
       )}
@@ -327,9 +327,9 @@ function GameView({ difficulty, userData, onGameOver }) {
       {showGameOverPopup && (
         <div className="game-over-popup position-absolute top-50 start-50 translate-middle bg-dark text-white rounded p-3 animate__animated animate__fadeIn">
           <img
-            src={require('../assets/img/Gameover.png')} // Correct path to the correct.png image
+            src={require('../assets/img/Gameover.png')} 
             alt="GameOver"
-            style={{ width: "150px", height: "140px" }} // Adjust size as needed
+            style={{ width: "150px", height: "140px" }} 
           />
         </div>
       )}

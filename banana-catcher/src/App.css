@@ -4,11 +4,11 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #1a1a1a; /* Black background */
+  background-color: #1a1a1a; 
 }
 
 .login-box {
-  background-color: #2b2b2b; /* Darker gray for the form box */
+  background-color: #2b2b2b; 
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -17,7 +17,7 @@
 }
 
 .logo {
-  color: #e6b800; /* Dark yellow for Banana Catcher */
+  color: #e6b800; 
   font-size: 40px;
   font-weight: bold;
   text-align: center;
@@ -28,40 +28,39 @@
   width: 100%;
   padding: 12px;
   margin: 10px 0;
-  border: 1px solid #4d4d4d; /* Subtle gray border */
+  border: 1px solid #4d4d4d; 
   border-radius: 5px;
   font-size: 16px;
-  background-color: #333333; /* Dark input background */
-  color: #ffffff; /* White text */
+  background-color: #333333; 
+  color: #ffffff; 
 }
 
 .input-field::placeholder {
-  color: #b3b3b3; /* Light gray placeholder */
+  color: #b3b3b3; 
 }
 
 .login-btn {
   width: 100%;
   padding: 12px;
-  background-color: #e6b800; /* Dark yellow button */
-  color: #1a1a1a; /* Black text on button */
+  background-color: #e6b800; 
+  color: #1a1a1a; 
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 10px; /* Existing spacing */
+  margin-top: 10px; 
 }
 
 .login-btn:hover {
   background-color: #cca300;
 }
 
-/* Add spacing between buttons */
 .login-box button + button {
-  margin-top: 15px; /* Extra spacing between buttons */
+  margin-top: 15px; 
 }
 
 .error {
-  color: #ff4d4d; /* Red for error messages */
+  color: #ff4d4d; 
   font-size: 14px;
   text-align: center;
   margin-top: 10px;
@@ -69,13 +68,12 @@
 
 
 .date-hint {
-  color: #b3b3b3; /* Light gray to look like a placeholder */
+  color: #b3b3b3; 
   font-size: 12px;
   margin-top: 5px;
   text-align: left;
 }
 
-/* Existing styles remain unchanged, add these at the bottom */
 
 .modal-overlay {
   position: fixed;
@@ -83,15 +81,15 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black overlay */
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it’s on top */
+  z-index: 1000; 
 }
 
 .modal-content {
-  background-color: #2b2b2b; /* Dark gray background */
+  background-color: #2b2b2b; 
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -101,26 +99,26 @@
 }
 
 .modal-content button {
-  margin-top: 10px; /* Spacing between modal buttons */
+  margin-top: 10px; 
 }
 
 .modal-content button:hover {
-  background-color: #cca300; /* Hover effect for difficulty buttons */
+  background-color: #cca300; 
 }
 
 .modal-content button[style*="background-color: #ff4d4d"]:hover {
-  background-color: #e60000; /* Hover effect for Cancel button */
+  background-color: #e60000; 
 }
 
 .game-container {
   position: relative;
   height: 100vh;
-  background-color: #1a1a1a; /* Black background */
+  background-color: #1a1a1a; 
   overflow: hidden;
 }
 
 .numbers-container {
-  position: relative; /* For absolute positioning of numbers and bucket */
+  position: relative; 
 }
 
 .bucket {
@@ -129,7 +127,6 @@
   width: 50px;
   height: 50px;
 }
-/* Game UI Elements */
 .score {
   position: absolute;
   top: 10px;
@@ -139,7 +136,6 @@
   z-index: 100;
 }
 
-/* Pause Screen */
 .pause-screen {
   position: fixed;
   top: 0;
@@ -168,7 +164,6 @@
 
 
 
-/* Bucket Hit Effect */
 .bucket-hit {
   animation: hitEffect 0.3s;
 }
@@ -179,44 +174,42 @@
   100% { transform: scale(1); }
 }
 
-/* 3D Container Effect */
 .three-d-container {
-  perspective: 1000px; /* Adds depth perception */
-  border: 2px solid #e6b800; /* Dark yellow border */
-  box-shadow: 0 0 20px rgba(230, 184, 0, 0.5); /* Glow effect */
+  perspective: 1000px;
+  border: 2px solid #e6b800; 
+  box-shadow: 0 0 20px rgba(230, 184, 0, 0.5); 
 }
 
 .falling-number {
-  transform: translateZ(0); /* Enable 3D transform */
-  transition: transform 0.2s ease-out; /* Smooth falling */
+  transform: translateZ(0); 
+  transition: transform 0.2s ease-out; 
 }
 
 .falling-number:hover {
-  transform: translateZ(20px); /* Pop out on hover */
+  transform: translateZ(20px); 
 }
 
 .correct-popup,
 .wrong-popup,
 .miss-popup,
 .game-over-popup {
-  z-index: 1000; /* Ensure popups are on top */
+  z-index: 1000; 
   font-size: 24px;
 }
 
-/* Loading Spinner */
 .loading-spinner {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full screen height */
-  background-color: #1a1a1a; /* Match your theme */
+  height: 100vh; 
+  background-color: #1a1a1a; 
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 5px solid #e6b800; /* Dark yellow */
-  border-top: 5px solid transparent; /* Transparent top for spinning effect */
+  border: 5px solid #e6b800; 
+  border-top: 5px solid transparent; 
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

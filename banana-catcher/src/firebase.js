@@ -12,12 +12,10 @@ const firebaseConfig = {
     measurementId: "G-XM0J7H5HET"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Enable session persistence (stays logged in until explicitly signed out)
 setPersistence(auth, browserSessionPersistence);
 
 export { auth, db };

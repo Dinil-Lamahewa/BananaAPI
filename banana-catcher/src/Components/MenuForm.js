@@ -1,6 +1,6 @@
 import React, { useState,useContext  } from "react";
 import { auth } from "../firebase";
-import Leaderboard from "./Leaderboard"; // Import Leaderboard
+import Leaderboard from "./Leaderboard"; 
 import { AudioContext } from "../Components/AudioContext";
 import "../App.css";
 
@@ -10,7 +10,7 @@ import "../App.css";
 
 function MenuForm({ user, userData, onDifficultySelect }) {
   const [showModal, setShowModal] = useState(false);
-  const [showLeaderboard, setShowLeaderboard] = useState(false); // New state
+  const [showLeaderboard, setShowLeaderboard] = useState(false); 
   const { mute, toggleMute } = useContext(AudioContext);
 
   const handleQuit = () => {

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword, sendPasswordResetEmail,fetchSignInMethodsForEmail } from "firebase/auth";
 import { auth } from "../firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../firebase"; // Make sure your firebase config exports db
 import "../App.css";
 
 
@@ -34,7 +32,6 @@ function LoginForm({ onSwitchToRegister }) {
     setLoading(true);
     
     try {
-      // ONLY check Firebase Auth (exact match required)
       await sendPasswordResetEmail(auth, email);
       setResetMessage("Reset link sent to registered email!");
       setTimeout(() => setShowForgotPassword(false), 3000);
@@ -118,7 +115,7 @@ function LoginForm({ onSwitchToRegister }) {
               <p
                 className="text-center"
                 style={{
-                  color: resetMessage.includes("sent") ? "#e6b800" : "#ff4444", // Green for success, red for error
+                  color: resetMessage.includes("sent") ? "#e6b800" : "#ff4444", 
                 }}
               >
                 {resetMessage}

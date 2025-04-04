@@ -12,7 +12,7 @@ function RegisterForm({ onSwitchToLogin }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // New loading state
+  const [loading, setLoading] = useState(false); 
 
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -26,7 +26,7 @@ function RegisterForm({ onSwitchToLogin }) {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true); // Start loading
+    setLoading(true); 
 
     if (!emailRegex.test(email)) {
       setError("Please enter a valid Gmail address.");
@@ -70,7 +70,7 @@ function RegisterForm({ onSwitchToLogin }) {
     } catch (err) {
       setError("Registration failed. Email might already be in use.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false); 
     }
   };
 

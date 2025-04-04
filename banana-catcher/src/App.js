@@ -14,7 +14,7 @@ function App() {
   const [userData, setUserData] = useState(null);
   const [showLogin, setShowLogin] = useState(true);
   const [difficulty, setDifficulty] = useState(null);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -30,7 +30,7 @@ function App() {
         setUserData(null);
         setDifficulty(null);
       }
-      setLoading(false); // Done loading auth state
+      setLoading(false); 
     });
     return () => unsubscribe();
   }, []);

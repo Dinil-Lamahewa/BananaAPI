@@ -7,13 +7,13 @@ function Leaderboard({ onBack }) {
   const [leaderboard, setLeaderboard] = useState([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState("easy");
   const [loading, setLoading] = useState(true);
-  const [joke, setJoke] = useState(null); // State for storing the joke
+  const [joke, setJoke] = useState(null); 
 
   const fetchJoke = async () => {
     try {
       const response = await fetch("https://official-joke-api.appspot.com/random_joke");
       const data = await response.json();
-      setJoke(data); // Save the random joke in state
+      setJoke(data); 
     } catch (error) {
       console.error("Error fetching joke:", error);
     }
@@ -59,7 +59,6 @@ function Leaderboard({ onBack }) {
       fetchJoke();
     }, 7000);
   
-    // Cleanup interval on component unmount
     return () => clearInterval(jokeInterval);
   }, [selectedDifficulty]);
 

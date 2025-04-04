@@ -4,7 +4,7 @@ export const AudioContext = createContext();
 
 export const AudioProvider = ({ children }) => {
   const audioRef = useRef(null);
-  const [mute, setMute] = useState(false); // Mute state
+  const [mute, setMute] = useState(false); 
 
   useEffect(() => {
     audioRef.current = new Audio(require("../assets/aud/BM.mp3"));
