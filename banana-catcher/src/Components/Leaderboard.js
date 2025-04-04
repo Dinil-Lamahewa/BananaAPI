@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { collection, getDocs, query, orderBy, where, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "../App.css";
 
 function Leaderboard({ onBack }) {
   const [leaderboard, setLeaderboard] = useState([]);
   const [selectedDifficulty, setSelectedDifficulty] = useState("easy");
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
+  const [joke, setJoke] = useState(null); // State for storing the joke
+
+  const fetchJoke = async () => {
+    try {
+      const response = await fetch("https://official-joke-api.appspot.com/random_joke");
+      const data = await response.json();
+      setJoke(data); // Save the random joke in state
+    } catch (error) {
+      console.error("Error fetching joke:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      setLoading(true); // Start loading
+      setLoading(true);
       try {
         const scoresRef = collection(db, "scores");
         const usersSnapshot = await getDocs(scoresRef);
@@ -39,10 +50,17 @@ function Leaderboard({ onBack }) {
         console.error("Error fetching leaderboard:", error);
         setLeaderboard([]);
       } finally {
-        setLoading(false); // Done loading
+        setLoading(false);
       }
     };
+    fetchJoke();
     fetchLeaderboard();
+    const jokeInterval = setInterval(() => {
+      fetchJoke();
+    }, 7000);
+  
+    // Cleanup interval on component unmount
+    return () => clearInterval(jokeInterval);
   }, [selectedDifficulty]);
 
   const handleDifficultyChange = (e) => {
@@ -77,7 +95,7 @@ function Leaderboard({ onBack }) {
             <option value="hard">Hard</option>
           </select>
         </div>
-        <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+        <div style={{ maxHeight: "250px", overflowY: "auto" }}>
           <table className="table table-dark table-striped">
             <thead>
               <tr>
@@ -105,6 +123,16 @@ function Leaderboard({ onBack }) {
             </tbody>
           </table>
         </div>
+        {joke && (
+          <div className="joke-section mt-4" style={{ backgroundColor: "#333333", padding: "20px", borderRadius: "10px" }}>
+            <center><h3 style={{ color:"white" }}><u>Fun Fact</u></h3></center>
+            <blockquote className="blockquote text-center" style={{ color: "white" }}>
+              <p className="mb-0">{joke.setup}</p>
+              <br />
+              <footer className="blockquote-footer" style={{ color: "white" }}>{joke.punchline}</footer>
+            </blockquote>
+          </div>
+        )}
         <button className="login-btn" onClick={onBack}>
           Back to Menu
         </button>
